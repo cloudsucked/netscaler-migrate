@@ -40,7 +40,7 @@ def read_file(file_path):
                         existing_zone_id = zone_exists(zone_name)
                         if not existing_zone_id:
                             print(f"Zone does not exist: {zone_name}")
-                            zone_id, nameservers = create_zone(zone_name)
+                            zone_id = create_zone(zone_name)
                             if zone_id:
                                 zones.append({"zone_name": zone_name, "zone_id": zone_id})
                         else:
@@ -88,6 +88,8 @@ def zone_exists(zone_name):
     response = httpx.get(url, headers=headers)
     if response.status_code == 200 and response.json().get('success'):
         result = response.json().get('result', {})
+        if not result:
+            return False
         zone_id = result[0].get('id')
         return zone_id
     else:
