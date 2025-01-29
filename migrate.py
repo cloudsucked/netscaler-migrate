@@ -113,9 +113,8 @@ def create_zone(zone_name):
     if response.status_code == 200 and response.json().get('success'):
         result = response.json().get('result', {})
         zone_id = result.get('id')
-        nameservers = result.get('name_servers', [])
         print(f"Successfully created zone: {zone_name}, Zone ID: {zone_id}")
-        return zone_id, nameservers
+        return zone_id
     else:
         print(f"Failed to create zone: {zone_name}, Status Code: {response.status_code}, Response: {response.text}")
         return None
