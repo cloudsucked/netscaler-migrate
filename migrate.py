@@ -28,6 +28,7 @@ def read_file(file_path):
     a_records = []
     aaaa_records = []
     cname_records = []
+    txt_records = []
     with open(file_path, 'r') as file:
         for line in file:
             ## Create new Zones where SOA records existed
@@ -69,11 +70,18 @@ def read_file(file_path):
                 if len(words) >= 5:
                     print(f"cname: {words[3]} --> target: {words[4]}")
                     cname_records.append({"name": words[3], "content": words[4], "type": "CNAME"})
+            ## Create new TXT record for txtRec
+            if line.startswith("add dns txtRec"):
+                words = line.split()
+                if len(words) >= 5:
+                    print(f"cname: {words[3]} --> target: {words[4]}")
+                    cname_records.append({"name": words[3], "content": words[4], "type": "TXT"})
     parsed_file = {
         "zones": zones + existing_zones,
         "a_records": a_records,
         "aaaa_records": aaaa_records,
-        "cname_records": cname_records
+        "cname_records": cname_records,
+        "txt_records": txt_records
     }
     return parsed_file
 
@@ -182,4 +190,7 @@ if __name__ == "__main__":
 
     for cname_record in parsed_file.get('cname_records'):
         add_record(cname_record, zones)
+
+    for txt_record in parsed_file.get('txt_records'):
+        add_record(txt_record, zones)
 
